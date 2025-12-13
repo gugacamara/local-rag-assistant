@@ -1,0 +1,56 @@
+services:
+  # --- Serviço de IA (Ollama com GPU) ---
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag_ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_storage:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - ai_net
+    restart: always
+
+  # --- Backend (Python FastAPI) ---
+  backend:
+    build: ./backend
+    container_name: rag_backend
+    volumes:
+      - ./backend/app:/app/app       # Hot-Reload
+      - ./data_pdfs:/app/data_pdfs   # Pasta para seus PDFs
+      - chroma_storage:/chroma_db    # Banco de Vetores
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - CHROMA_DB_DIR=/chroma_db
+    depends_on:
+      - ollama
+    networks:
+      - ai_net
+
+  # --- Frontend (Angular.js) ---
+  frontend:
+    build: ./frontend
+    container_name: rag_frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - ai_net
+
+volumes:
+  ollama_storage:
+  chroma_storage:
+
+networks:
+  ai_net:
+    driver: bridge
