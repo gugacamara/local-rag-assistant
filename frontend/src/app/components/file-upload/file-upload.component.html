@@ -1,0 +1,18 @@
+<div class="upload-container">
+  <label class="upload-btn" [class.disabled]="isUploading()">
+    <input type="file" accept=".pdf" (change)="onFileSelected($event)" [disabled]="isUploading()">
+    <span>
+      @if (isUploading()) {
+        ⏳ Enviando...
+      } @else {
+        📎 Adicionar PDF
+      }
+    </span>
+  </label>
+  
+  @if (uploadStatus()) {
+    <div class="status-message">
+      {{ uploadStatus() }}
+    </div>
+  }
+</div>

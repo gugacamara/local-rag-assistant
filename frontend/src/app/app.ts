@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core'; // <--- Importante: signal
 import { FormsModule } from '@angular/forms';
 import { ChatService } from './services/chat.service';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, FileUploadComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -20,7 +21,6 @@ export class App {
   async send() {
     if (!this.userQuery.trim()) return;
 
-    // CORREÇÃO AQUI: Usando .set() para atualizar signals
     this.responseBuffer.set('');
     this.isLoading.set(true);
     
@@ -28,7 +28,6 @@ export class App {
 
     try {
       await this.chatService.sendMessage(queryToSend, (chunk) => {
-        // CORREÇÃO AQUI: Usando .update()
         this.responseBuffer.update(old => old + chunk);
       });
     } catch (error) {

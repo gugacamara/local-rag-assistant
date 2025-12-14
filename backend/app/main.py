@@ -1,9 +1,12 @@
 import os
-from fastapi import FastAPI
+import shutil
+from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import StreamingResponse
-from fastapi.middleware.cors import CORSMiddleware  # <--- IMPORTANTE
+from fastapi.middleware.cors import CORSMiddleware
 from langchain_ollama import OllamaLLM, OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import ChatPromptTemplate
 
 app = FastAPI(title="Personal Chat RAG")
@@ -20,14 +23,38 @@ app.add_middleware(
 # Configurações
 OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 CHROMA_PATH = os.getenv("CHROMA_DB_DIR", "/chroma_db")
+DATA_PATH = os.getenv("DATA_PDFS_DIR", "/data/files")
 
 # Usando o Qwen 2 (0.5B)
 llm = OllamaLLM(base_url=OLLAMA_URL, model="qwen2:0.5b") 
 embeddings = OllamaEmbeddings(base_url=OLLAMA_URL, model="all-minilm")
 
+os.makedirs(DATA_PATH, exist_ok=True)
+
 @app.get("/")
 def health_check():
     return {"status": "running", "model": "qwen2:0.5b"}
+
+@app.post("/upload")
+async def upload_file(file: UploadFile = File(...)):
+    file_path = os.path.join(DATA_PATH, file.filename)
+    
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+        
+    try:
+        loader = PyPDFLoader(file_path)
+        docs = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+        splits = text_splitter.split_documents(docs)
+        
+        # Atualizar Vector DB
+        db = Chroma(persist_directory=CHROMA_PATH, embedding_function=embeddings)
+        db.add_documents(splits)
+        
+        return {"filename": file.filename, "status": "uploaded and ingested", "chunks": len(splits)}
+    except Exception as e:
+        return {"filename": file.filename, "status": "error", "detail": str(e)}
 
 @app.post("/chat")
 async def chat_endpoint(query: str):
