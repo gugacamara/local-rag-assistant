@@ -1,15 +1,28 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://localhost:8000/chat';
+  private apiUrl = environment.apiUrl;
 
   constructor() { }
 
+  async uploadFile(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${this.apiUrl}/upload`, {
+      method: 'POST',
+      body: formData
+    });
+
+    return await response.json();
+  }
+
   async sendMessage(query: string, onChunk: (text: string) => void): Promise<void> {
-    const response = await fetch(`${this.apiUrl}?query=${encodeURIComponent(query)}`, {
+    const response = await fetch(`${this.apiUrl}/chat?query=${encodeURIComponent(query)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

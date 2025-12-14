@@ -24,13 +24,14 @@ services:
     container_name: rag_backend
     volumes:
       - ./backend/app:/app/app       # Hot-Reload
-      - ./data_pdfs:/app/data_pdfs   # Pasta para seus PDFs
+      - ./data/pdfs:${DATA_PDFS_DIR} # Pasta para seus PDFs (Mapeia Host -> Container)
       - chroma_storage:/chroma_db    # Banco de Vetores
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT:-8000}:8000"
     environment:
-      - OLLAMA_BASE_URL=http://ollama:11434
-      - CHROMA_DB_DIR=/chroma_db
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+      - CHROMA_DB_DIR=${CHROMA_DB_DIR}
+      - DATA_PDFS_DIR=${DATA_PDFS_DIR}
     depends_on:
       - ollama
     networks:
@@ -41,7 +42,7 @@ services:
     build: ./frontend
     container_name: rag_frontend
     ports:
-      - "8080:80"
+      - "${FRONTEND_PORT:-8080}:80"
     depends_on:
       - backend
     networks:
