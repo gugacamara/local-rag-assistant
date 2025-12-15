@@ -110,15 +110,13 @@ docker exec rag_backend pytest -v
 ```
 
 ### Frontend (Karma/Jasmine)
-Para rodar os testes unitários dos componentes Angular:
+Para rodar os testes unitários dos componentes Angular, é recomendado executar localmente, pois o container Docker de produção (Nginx) não possui as ferramentas de desenvolvimento.
 
 ```bash
-# Se tiver o Node localmente:
+# Na pasta frontend:
 cd frontend
+npm install
 ng test
-
-# Ou via Docker (se configurado no Dockerfile de dev):
-docker exec rag_frontend ng test --watch=false
 ```
 
 ---
