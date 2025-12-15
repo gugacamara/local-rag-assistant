@@ -158,5 +158,5 @@ local-rag-assistant/
 Este projeto está sob a licença MIT. Sinta-se à vontade para contribuir!
 
 ---
-Desenvolvido por **[Seu Nome]** 🚀
+Desenvolvido por **[Gustavo Camara]** 🚀
 [LinkedIn](https://linkedin.com/in/seu-linkedin) | [GitHub](https://github.com/seu-github)
