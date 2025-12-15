@@ -3,6 +3,9 @@ uvicorn
 langchain
 langchain-community
 langchain-ollama
+langchain-chroma
 chromadb
 pypdf
 python-multipart
+pytest
+httpx

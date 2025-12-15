@@ -1,32 +1,5 @@
-<div class="chat-container">
+<div class="app-container">
   <h2 class="title-principal">Local Assistant</h2>
   <app-file-upload></app-file-upload>
-  <div class="input-group">
-    <input 
-      type="text" 
-      class="chat-input"
-      [(ngModel)]="userQuery" 
-      (keyup.enter)="send()"
-      placeholder="Pergunte algo sobre seus documentos..." 
-      [disabled]="isLoading()"
-    >
-    <button 
-      class="send-button"
-      (click)="send()" 
-      [disabled]="isLoading() || !userQuery.trim()"
-    >
-      @if (isLoading()) {
-        <span>Gerando...</span>
-      } @else {
-        <span>Enviar</span>
-      }
-    </button>
-  </div>
-
-  @if (responseBuffer()) {
-    <div class="response-area">
-      <h3 class="response-title">Resposta:</h3>
-      <pre class="response-text">{{ responseBuffer() }}</pre>
-    </div>
-  }
+  <app-chat></app-chat>
 </div>

@@ -1,10 +1,10 @@
 import os
 import shutil
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Depends
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from langchain_ollama import OllamaLLM, OllamaEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import ChatPromptTemplate
@@ -24,19 +24,21 @@ app.add_middleware(
 OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
 CHROMA_PATH = os.getenv("CHROMA_DB_DIR", "/chroma_db")
 DATA_PATH = os.getenv("DATA_PDFS_DIR", "/data/files")
-
-# Usando o Qwen 2 (0.5B)
-llm = OllamaLLM(base_url=OLLAMA_URL, model="qwen2:0.5b") 
-embeddings = OllamaEmbeddings(base_url=OLLAMA_URL, model="all-minilm")
-
 os.makedirs(DATA_PATH, exist_ok=True)
+
+# Funções de dependência
+def get_llm():
+    return OllamaLLM(base_url=OLLAMA_URL, model="qwen2:0.5b")
+
+def get_embeddings():
+    return OllamaEmbeddings(base_url=OLLAMA_URL, model="all-minilm")
 
 @app.get("/")
 def health_check():
     return {"status": "running", "model": "qwen2:0.5b"}
 
 @app.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...), embeddings=Depends(get_embeddings)):
     file_path = os.path.join(DATA_PATH, file.filename)
     
     with open(file_path, "wb") as buffer:
@@ -57,7 +59,7 @@ async def upload_file(file: UploadFile = File(...)):
         return {"filename": file.filename, "status": "error", "detail": str(e)}
 
 @app.post("/chat")
-async def chat_endpoint(query: str):
+async def chat_endpoint(query: str, llm=Depends(get_llm), embeddings=Depends(get_embeddings)):
     db = Chroma(persist_directory=CHROMA_PATH, embedding_function=embeddings)
     
     # Busca contexto (Retrieval)
