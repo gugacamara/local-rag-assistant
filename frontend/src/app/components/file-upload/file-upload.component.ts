@@ -27,7 +27,7 @@ export class FileUploadComponent {
       const result = await this.chatService.uploadFile(file);
       this.uploadStatus.set(`✅ Sucesso! ${result.chunks} trechos indexados.`);
     } catch (error) {
-      this.uploadStatus.set('❌ Erro ao enviar arquivo.');
+      this.uploadStatus.set('❌ Erro ao enviar arquivo: ' + (error as Error).message);
       console.error(error);
     } finally {
       this.isUploading.set(false);
