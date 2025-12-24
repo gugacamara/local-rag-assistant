@@ -18,7 +18,11 @@ export class ChatService {
       body: formData
     });
 
-    return await response.json();
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.detail || 'Erro ao enviar arquivo');
+    }
+    return data;
   }
 
   async sendMessage(query: string, onChunk: (text: string) => void): Promise<void> {
