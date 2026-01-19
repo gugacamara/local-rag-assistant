@@ -5,7 +5,7 @@
 
 ![Status](https://img.shields.io/badge/Status-Em_Desenvolvimento-yellow)
 ![Python](https://img.shields.io/badge/Backend-FastAPI-blue)
-![Angular](https://img.shields.io/badge/Frontend-Angular_17+-red)
+![Next.js](https://img.shields.io/badge/Frontend-Next.js_14+-blue)
 ![Docker](https://img.shields.io/badge/Infra-Docker-2496ED)
 ![AI](https://img.shields.io/badge/AI-Ollama_Local-orange)
 
@@ -20,8 +20,8 @@ Diferente de soluções baseadas em nuvem (como ChatGPT ou Claude), este projeto
 *   **Privacidade Total**: Nenhum dado sai da sua máquina.
 *   **Ingestão de Documentos**: Upload e processamento de PDFs com *chunking* inteligente.
 *   **Busca Semântica**: Utiliza **ChromaDB** para armazenar e recuperar vetores de contexto.
-*   **Chat Interativo**: Interface moderna em **Angular** com suporte a respostas em tempo real (streaming).
-*   **Arquitetura Modular**: Backend desacoplado (FastAPI) e Frontend reativo (Angular Signals).
+*   **Chat Interativo**: Interface moderna em **Next.js/React** com suporte a respostas em tempo real (streaming).
+*   **Arquitetura Modular**: Backend desacoplado (FastAPI) e Frontend reativo (React Hooks).
 *   **Containerização**: Setup completo via **Docker Compose**.
 
 ---
@@ -37,8 +37,8 @@ Diferente de soluções baseadas em nuvem (como ChatGPT ou Claude), este projeto
 *   **Pytest**: Testes unitários e de integração.
 
 ### Frontend
-*   **Angular (v17+)**: Framework SPA moderno.
-*   **Signals**: Gerenciamento de estado reativo.
+*   **Next.js (v14+)**: Framework React para aplicações modernas.
+*   **React**: Biblioteca para construção de interfaces.
 *   **Tailwind CSS / Custom CSS**: Estilização.
 
 ### Infraestrutura
@@ -109,16 +109,6 @@ Os testes do backend utilizam *mocks* para simular o LLM, permitindo execução 
 docker exec rag_backend pytest -v
 ```
 
-### Frontend (Karma/Jasmine)
-Para rodar os testes unitários dos componentes Angular, é recomendado executar localmente, pois o container Docker de produção (Nginx) não possui as ferramentas de desenvolvimento.
-
-```bash
-# Na pasta frontend:
-cd frontend
-npm install
-ng test
-```
-
 ---
 
 ## 📂 Estrutura do Projeto
@@ -131,11 +121,10 @@ local-rag-assistant/
 │   │   └── ...
 │   ├── tests/              # Testes automatizados (Pytest)
 │   └── Dockerfile
-├── frontend/               # Aplicação Angular
-│   ├── src/app/
-│   │   ├── components/     # Componentes (Chat, FileUpload)
-│   │   ├── services/       # Comunicação com API
-│   │   └── ...
+├── frontend/               # Aplicação Next.js
+│   ├── src/app/            # Rotas e páginas (App Router)
+│   ├── src/components/     # Componentes (Chat, FileUpload)
+│   ├── src/services/       # Comunicação com API
 │   └── Dockerfile
 ├── data/                   # Persistência de dados (PDFs, ChromaDB)
 ├── scripts/                # Scripts utilitários (init_models.sh)
