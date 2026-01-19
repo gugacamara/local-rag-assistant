@@ -37,12 +37,12 @@ services:
     networks:
       - ai_net
 
-  # --- Frontend (Angular.js) ---
+  # --- Frontend (Next) ---
   frontend:
     build: ./frontend
     container_name: rag_frontend
     ports:
-      - "${FRONTEND_PORT:-8080}:80"
+      - "${FRONTEND_PORT:-3000}:3000"
     depends_on:
       - backend
     networks:
