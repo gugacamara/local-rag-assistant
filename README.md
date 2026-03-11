@@ -5,7 +5,7 @@
 
 ![Status](https://img.shields.io/badge/Status-Em_Desenvolvimento-yellow)
 ![Python](https://img.shields.io/badge/Backend-FastAPI-blue)
-![Next.js](https://img.shields.io/badge/Frontend-Next.js_14+-blue)
+![Next.js](https://img.shields.io/badge/Frontend-Next.js_16+-blue)
 ![Docker](https://img.shields.io/badge/Infra-Docker-2496ED)
 ![AI](https://img.shields.io/badge/AI-Ollama_Local-orange)
 
@@ -37,7 +37,7 @@ Diferente de soluções baseadas em nuvem (como ChatGPT ou Claude), este projeto
 *   **Pytest**: Testes unitários e de integração.
 
 ### Frontend
-*   **Next.js (v14+)**: Framework React para aplicações modernas.
+*   **Next.js (v16+)**: Framework React para aplicações modernas.
 *   **React**: Biblioteca para construção de interfaces.
 *   **Tailwind CSS / Custom CSS**: Estilização.
 
